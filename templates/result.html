@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center">Your Result</h1>
+        <p class="text-center fs-4">You answered <strong>{{ score }}</strong> out of <strong>{{ total }}</strong> questions correctly!</p>
+
+        <h2 class="mt-5">Leaderboard:</h2>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rank, entry in enumerate(leaderboard, start=1) %}
+                <tr>
+                    <td>{{ rank }}</td>
+                    <td>{{ entry.user.username }}</td>
+                    <td>{{ entry.score }}</td>
+                    <td>{{ entry.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('index') }}" class="btn btn-primary mt-4">Go Home</a>
+    </div>
+</body>
+</html>
