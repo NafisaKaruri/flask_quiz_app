@@ -1,6 +1,14 @@
+/* fonts */
+.bruno-ace-regular {
+    font-family: "Bruno Ace", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 /* General */
 body {
     background-color: #FBF5DD;
+    font-family: "Bruno Ace", serif;
 }
 
 nav {
@@ -21,9 +29,11 @@ nav .btn a {
     text-decoration: none;
     color: #393431;
 }
+
 nav .btn:hover {
     border: 1px solid #FBF5DD;
 }
+
 nav .btn:hover a {
     color: #FBF5DD;
 }
@@ -35,14 +45,16 @@ nav .btn:hover a {
     color: #6d4732;
 }
 
-.login-btn {
+.login-btn,
+.register-btn {
     background: #000;
     font-weight: 700;
     padding: 0;
     border-radius: 5px;
 }
 
-.login-btn a {
+.login-btn a,
+.register-btn span {
     text-decoration: none;
     color: #fbf5dd;
     font-weight: 600;
@@ -55,7 +67,8 @@ nav .btn:hover a {
     transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
 }
 
-.login-btn:hover a {
+.login-btn:hover a,
+.register-btn:hover span {
     transform: translate3d(-8px, -8px, 0);
 }
 
@@ -85,4 +98,49 @@ nav .btn:hover a {
     50% {
         opacity: 0;
     }
+}
+
+/* register.html */
+#register-body {
+    background-color: #e5e5f7;
+    opacity: 0.8;
+    background-image: radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+#register-form {
+    width: 30em;
+    margin: auto;
+    height: 25em;
+    background: rgb(229, 229, 247);
+    background: linear-gradient(0deg, rgba(229, 229, 247, 0) 32%, rgba(68, 76, 247, 1) 71%);
+}
+
+.register-btn {
+    display: block;
+    margin: 4em auto;
+}
+
+#register-form label {
+    color: #ececf4;
+    font-weight: 600;
+}
+
+#register-form input {
+    box-shadow: 10px 10px #000;
+}
+
+.register-btn span {
+    background-color: #646bf7;
+    color: #e5e5f7;
+}
+
+#register-body #login-link {
+    text-decoration: none;
+    color: #444cf7;
+}
+
+#register-body #login-link:hover {
+    text-decoration: underline
 }
