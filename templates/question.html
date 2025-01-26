@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question {{ question_number }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2>Question {{ question_number }}</h2>
+        <p class="lead">{{ question['question'] }}</p>
+
+        <!-- Timer -->
+        <div id="timer" class="alert alert-info">Time left: 15 seconds</div>
+
+        <!-- Progress Bar -->
+        <div class="progress mt-3">
+            <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+
+        <form method="POST" class="mt-4">
+            {% for option in options %}
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="answer" value="{{ option }}" id="{{ option }}">
+                <label class="form-check-label" for="{{ option }}">{{ option }}</label>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary mt-3">Next Question</button>
+        </form>
+    </div>
+
+    <script>
+        // Countdown timer logic
+        let timeLeft = 15;  // Set your countdown time (in seconds)
+        const totalQuestions = {{ total_questions }};  // Total number of questions
+        const currentQuestion = {{ question_number }};  // Current question number
+        const progressBar = document.getElementById("progress-bar");
+
+        const countdown = setInterval(function() {
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                document.forms[0].submit();  // Auto-submit the form when time is up
+            } else {
+                document.getElementById("timer").innerText = "Time left: " + timeLeft + " seconds";
+                timeLeft -= 1;
+            }
+        }, 1000);
+
+        // Progress Bar Update
+        const progressPercentage = (currentQuestion / totalQuestions) * 100;
+        progressBar.style.width = progressPercentage + "%";
+        progressBar.setAttribute("aria-valuenow", progressPercentage);
+    </script>
+</body>
+</html>
+
