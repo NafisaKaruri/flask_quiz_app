@@ -2,6 +2,14 @@
 
 ## Overview
 A simple interactive web-based quiz application developed using Flask that allows users to register, login, take quizzes, and get their scores. This project includes functionalities for user authentication, dynamic quiz handling, and session management.
+The application also comes with an admin role for better management of the quiz questions and users.
+The **first user** to register to teh platform is automatically designated as the **admin**. The admin has the following privileges:
+- Add, edit, and delete quiz questions.
+- View, promote, or delete users.
+Regular **users** can:
+- Register or log in to access the quiz.
+- Take the quiz and see their results.
+- Check the leaderboard.
 
 ## Technologies used
 - **Backend:** Python ([Flask](https://flask.palletsprojects.com/))
@@ -14,7 +22,7 @@ A simple interactive web-based quiz application developed using Flask that allow
 - Timer to each question to answer before it.
 - Leaderboard that displays the top 5 users based on their quiz scores.
 - Responsive UI built with Bootstrap
-- Option for admins to add new quiz questions (protected route).
+- Option for admins to manage users and quiz questions (protected routes).
 
 ## Routes
 - `/login` - Login page for registered users.
