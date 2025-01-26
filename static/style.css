@@ -1,0 +1,88 @@
+/* General */
+body {
+    background-color: #FBF5DD;
+}
+
+nav {
+    background-color: #393431;
+    height: 4.5em;
+}
+
+.navbar-brand {
+    color: #fbf5dd;
+    font-weight: 600;
+}
+
+nav .btn {
+    background-color: #f1f1f1;
+}
+
+nav .btn a {
+    text-decoration: none;
+    color: #393431;
+}
+nav .btn:hover {
+    border: 1px solid #FBF5DD;
+}
+nav .btn:hover a {
+    color: #FBF5DD;
+}
+
+
+/* index.html */
+.button {
+    text-decoration: none;
+    color: #6d4732;
+}
+
+.login-btn {
+    background: #000;
+    font-weight: 700;
+    padding: 0;
+    border-radius: 5px;
+}
+
+.login-btn a {
+    text-decoration: none;
+    color: #fbf5dd;
+    font-weight: 600;
+    display: block;
+    background: #888179;
+    padding: 0.5rem 2rem;
+    border: 1px solid #000;
+    border-radius: 5px;
+    transform: translate3d(-4px, -4px, 0);
+    transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.login-btn:hover a {
+    transform: translate3d(-8px, -8px, 0);
+}
+
+#typewriter-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    font-size: 3.5em;
+}
+
+#typewriter-cursor {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    animation: blink-caret 0.75s step-end infinite;
+}
+
+/* Blinking underscore effect */
+@keyframes blink-caret {
+
+    from,
+    to {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
