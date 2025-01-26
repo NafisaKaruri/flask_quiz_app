@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Edit Question</h2>
+    <form method="POST" action="{{ url_for('edit_question', question_id=question.id) }}">
+        <div class="form-group">
+            <label for="question">Question</label>
+            <input type="text" name="question" id="question" class="form-control" value="{{ question.question }}">
+        </div>
+        <div class="form-group">
+            <label for="option_a">Option A</label>
+            <input type="text" name="option_a" id="option_a" class="form-control" value="{{ question.option_a }}">
+        </div>
+        <div class="form-group">
+            <label for="option_b">Option B</label>
+            <input type="text" name="option_b" id="option_b" class="form-control" value="{{ question.option_b }}">
+        </div>
+        <div class="form-group">
+            <label for="option_c">Option C</label>
+            <input type="text" name="option_c" id="option_c" class="form-control" value="{{ question.option_c }}">
+        </div>
+        <div class="form-group">
+            <label for="option_d">Option D</label>
+            <input type="text" name="option_d" id="option_d" class="form-control" value="{{ question.option_d }}">
+        </div>
+        <div class="form-group">
+            <label for="answer">Answer</label>
+            <input type="text" name="answer" id="answer" class="form-control" value="{{ question.answer }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
