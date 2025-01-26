@@ -68,7 +68,8 @@ nav .btn:hover a {
 
 .login-btn a,
 .start-btn a,
-.register-btn span {
+.register-btn span,
+.login-btn span {
     text-decoration: none;
     font-weight: 600;
     display: block;
@@ -83,7 +84,8 @@ nav .btn:hover a {
 
 .login-btn:hover a,
 .register-btn:hover span,
-.start-btn:hover a {
+.start-btn:hover a,
+.login-btn:hover span {
     transform: translate3d(-8px, -8px, 0);
 }
 
@@ -116,7 +118,8 @@ nav .btn:hover a {
 }
 
 /* register.html */
-#register-body {
+#register-body,
+#login-body {
     background-color: #e5e5f7;
     opacity: 0.8;
     background-image: radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
@@ -124,7 +127,8 @@ nav .btn:hover a {
     background-position: 0 0, 10px 10px;
 }
 
-#register-form {
+#register-form,
+#login-form {
     width: 30em;
     margin: auto;
     height: 25em;
@@ -132,21 +136,25 @@ nav .btn:hover a {
     background: linear-gradient(0deg, rgba(229, 229, 247, 0) 32%, rgba(68, 76, 247, 1) 71%);
 }
 
-.register-btn {
+#register-form .register-btn,
+#login-form .login-btn {
     display: block;
     margin: 4em auto;
 }
 
-#register-form label {
+#register-form label,
+#login-form label {
     color: #ececf4;
     font-weight: 600;
 }
 
-#register-form input {
+#register-form input,
+#login-form input {
     box-shadow: 10px 10px #000;
 }
 
-.register-btn span {
+#register-form .register-btn span,
+#login-form .login-btn span {
     background-color: #646bf7;
     color: #e5e5f7;
 }
@@ -159,3 +167,5 @@ nav .btn:hover a {
 #register-body #login-link:hover {
     text-decoration: underline
 }
+
+/* login.html */
