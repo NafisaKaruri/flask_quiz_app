@@ -1,3 +1,30 @@
+"""
+app.py
+The main entry point for the Flask app. It contains routes, views and logic for handling user authentication, quiz management and the admin dashboard.
+
+Key Features:
+- User authentication (login, logout, registration).
+- Admin dashboard for managing users and questions.
+- Quiz functionality including starting a quiz, answering questions, and viewing results.
+- API endpoint for retrieving quiz questions.
+
+Routes:
+- `/` (Homepage)
+- `/login` (User login)
+- `/register` (User registration)
+- `/logout` (User logout)
+- `/quiz` (Start quiz)
+- `/question/<question_number>` (Answer quiz questions)
+- `/submit_quiz` (Submit quiz results)
+- `/result` (View quiz results)
+- `/admin` (Admin dashboard)
+- `/make_admin/<user_id>` (Promote users to admins)
+- `/delete_user/<user_id>` (Deletes a user)
+- `/edit_question/<question_id>` (Edits an existing question)
+- `/delete_question/<question_id>` (Deletes an existing question)
+- `/add_question` (Add a new question - Admin only)
+- `/api/questions` (Retrieve questions via API)
+"""
 from flask import abort, render_template, request, redirect, url_for, session, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from model import app, db, User, Question, QuizResult
@@ -10,8 +37,15 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Protect the admin orutes
 def admin_required(f):
+    """
+    A decorator to restrict access to routes to admin-only routes.
+    Args:
+        f (function): The route function to decorate.
+
+    Returns:
+        function: The decoratedd function that checks if current user is an admin.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated or not current_user.is_admin:
@@ -19,18 +53,33 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# admimn dashboard
+
 @app.route('/admin')
 @login_required
 @admin_required
 def admin_dashboard():
+    """
+    Renders the admin dashboard with all users and questions.
+    Returns:
+       str: Rendered HTML page for the dashboard.
+    """
     users = User.query.all()
     questions = Question.query.all()
     return render_template('admin.html', users=users, questions=questions)
+
+
 @app.route('/make_admin/<int:user_id>')
 @login_required
 @admin_required
 def make_admin(user_id):
+    """
+    Promotes a user to be an admin.
+    Args:
+       user_id (int): The ID of the user to be promoted.
+
+    Returns:
+        Redirect: Rediecs to the admin dashboard
+    """
     user = User.query.get_or_404(user_id)
     user.is_admin = True
     db.session.commit()
@@ -41,19 +90,36 @@ def make_admin(user_id):
 @login_required
 @admin_required
 def delete_user(user_id):
+    """
+    Deletes a user and their quiz results.
+    Args:
+        user_id (int): The ID of the user to be deleted.
+
+    Returns:
+        Redirect: Redirects to teh admin dashboard.
+    """
     user = User.query.get_or_404(user_id)
     QuizResult.query.filter_by(user_id=user.id).delete()
     db.session.commit()
-
     db.session.delete(user)
     db.session.commit()
     flash("User deleted successfully.", "success")
     return redirect(url_for('admin_dashboard'))
 
+
 @app.route('/edit_question/<int:question_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def edit_question(question_id):
+    """
+    Edits an existing question.
+    Args:
+        question_id (int): The ID of the question to be edited.
+
+    Returns:
+        str: Rendered HTML page to edit the question.
+        Redirect: Redirects to the admin dashboard after updating the question
+    """
     question = Question.query.get_or_404(question_id)
     if request.method == 'POST':
         question.question = request.form['question']
@@ -62,36 +128,65 @@ def edit_question(question_id):
         question.option_c = request.form['option_c']
         question.option_d = request.form['option_d']
         question.answer = request.form['answer']
-        
+
         db.session.commit()
         flash('Question updated successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
     
     return render_template('edit_question.html', question=question)
 
+
 @app.route('/delete_question/<int:question_id>')
 @login_required
 @admin_required
 def delete_question(question_id):
+    """
+    Deletes an existing quiz question.
+    Args:
+        question_id (int): The ID of the question to be deleted.
+
+    Returns:
+        Redirect: Redirects to the admin dashboard.
+    """
     question = Question.query.get_or_404(question_id)
     db.session.delete(question)
     db.session.commit()
     flash("Question deleted successfully.", "success")
     return redirect(url_for('admin_dashboard'))
 
-# Load user for Flask-Login
+
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Loads a user by their ID for Flask-Login.
+
+    Args:
+        user_id (int): The ID of the user to be loaded.
+
+    Returns:
+        User: The user object associated with the given ID.
+    """
     return User.query.get(int(user_id))
 
-# Home route
+
 @app.route('/')
 def index():
+    """
+    Renders the home page.
+    Returns:
+        str: Rendered HTML page for the index page.
+    """
     return render_template('index.html')
 
-# Register route
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    Handles user registeration. The first user is automatically admin.
+    Returns:
+        str: Rendered HTML page for registration.
+        Redirect: Redirects to the login apon successfull rgistration.
+    """
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -119,9 +214,16 @@ def register():
 
     return render_template('register.html')
 
-# Login route
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    Handes user login. Redirects admins to the adin dashboard.
+    Returns:
+    str:
+        Rendered HTML page for login.
+        Redirect: Redirects to the admin dashboard or quiz page upon successful login.
+    """
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -142,17 +244,29 @@ def login():
 
     return render_template('login.html')
 
-# Logout route
+
 @app.route('/logout')
 @login_required
 def logout():
+    """
+    Handes user logout.
+    Returns:
+        Redirect: Redirects to the index page.
+
+    """
     logout_user()
     return redirect(url_for('index'))
 
-# Quiz route (with authentication)
+
 @app.route('/quiz', methods=["GET", "POST"])
 @login_required
 def quiz():
+    """
+    Starts the quize session when the form is submitted.
+    Returns:
+        str: Rendered HTML page of the quiz.
+        Redirect: Redircts to the first question upon starting the quiz.
+    """
     if request.method == "POST":
         session['score'] = 0
         session['questions_answered'] = 0
@@ -163,10 +277,19 @@ def quiz():
     session['total_questions'] = len(questions)
     return render_template('quiz.html', questions=questions)
 
-# Next question route
+
 @app.route('/question/<int:question_number>', methods=["GET", "POST"])
 @login_required
 def next_question(question_number):
+    """
+    Renders the current question in the quiz and handles user answers.
+    Args:
+        question_number (int): The number of the questions to display.
+
+    Returns:
+        str: Rendered HTML page for the question.
+        Redirect: Redirects to the next question or the results page if quiz ends.
+    """
     question = Question.query.get(question_number)
     if not question:
         return redirect(url_for('result'))
@@ -182,10 +305,15 @@ def next_question(question_number):
     options = [question.option_a, question.option_b, question.option_c, question.option_d]
     return render_template('question.html', question=question, question_number=question_number, options=options, total_questions=Question.query.count())
 
-# Submit quiz
+
 @app.route('/submit_quiz', methods=['POST'])
 @login_required
 def submit_quiz():
+    """
+    Handes the submission of the quiz and stores the results in the db.
+    Returns:
+        Redirect: Redirects to the quiz results page.
+    """
     score = session.get('score', 0)
     total_questions = session.get('total_questions', 0)
 
@@ -201,10 +329,15 @@ def submit_quiz():
     flash('Quiz submitted successfully!', 'success')
     return redirect(url_for('quiz_results'))
 
-# Results route
+
 @app.route('/result')
 @login_required
 def result():
+    """
+    Display the suer's quiz resuts and the leaderboard.
+    Returns:
+        str: Rendered HTML page for the quiz results.
+    """
     score = session.get('score', 0)
     total = Question.query.count()
 
@@ -226,10 +359,17 @@ def result():
         enumerate=enumerate
     )
 
-# Route to display the form and handle form submission
+
 @app.route('/add_question', methods=['GET', 'POST'])
 @login_required
 def add_question():
+    """
+    Adds a new question to the quiz.
+
+    Returns:
+        str: Rendered HTML page for adding a question.
+        Redirect: Redirects to the admin dashboard upon successful addition.
+    """
     if not current_user.is_admin:
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('index'))
@@ -264,8 +404,14 @@ def add_question():
 
     return render_template('add_question.html')
 
+
 @app.route('/api/questions', methods=['GET'])
 def get_questions():
+    """
+    Provide an API endpoint to retrieve all quiz questions.
+    Returns:
+        dict: JSON response containing a list of all questions and their details.
+    """
     questions = Question.query.all()
     question_list = [{
         "id": q.id,
