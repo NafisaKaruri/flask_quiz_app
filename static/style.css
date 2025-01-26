@@ -12,8 +12,12 @@ body {
 }
 
 nav {
-    background-color: #393431;
+    background: #444cf7;
     height: 4.5em;
+}
+
+nav .navbar-text {
+    color: #e5e5f7
 }
 
 .navbar-brand {
@@ -40,13 +44,22 @@ nav .btn:hover a {
 
 
 /* index.html */
+#index-body {
+    background-color: #e5e5f7;
+    opacity: 1;
+    background-image: radial-gradient(#444cf7 1.25px, transparent 1.25px), radial-gradient(#444cf7 1.25px, #e5e5f7 1.25px);
+    background-size: 50px 50px;
+    background-position: 0 0, 25px 25px;
+}
+
 .button {
     text-decoration: none;
-    color: #6d4732;
+    color: #444cf7;
 }
 
 .login-btn,
-.register-btn {
+.register-btn,
+.start-btn {
     background: #000;
     font-weight: 700;
     padding: 0;
@@ -54,21 +67,23 @@ nav .btn:hover a {
 }
 
 .login-btn a,
+.start-btn a,
 .register-btn span {
     text-decoration: none;
-    color: #fbf5dd;
     font-weight: 600;
     display: block;
-    background: #888179;
     padding: 0.5rem 2rem;
     border: 1px solid #000;
     border-radius: 5px;
     transform: translate3d(-4px, -4px, 0);
     transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
+    background-color: #646bf7;
+    color: #e5e5f7;
 }
 
 .login-btn:hover a,
-.register-btn:hover span {
+.register-btn:hover span,
+.start-btn:hover a {
     transform: translate3d(-8px, -8px, 0);
 }
 
