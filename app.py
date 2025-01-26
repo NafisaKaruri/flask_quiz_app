@@ -1,6 +1,8 @@
 """
 app.py
-The main entry point for the Flask app. It contains routes, views and logic for handling user authentication, quiz management and the admin dashboard.
+The main entry point for the Flask app.
+It contains routes, views and logic for handling
+user authentication, quiz management and the admin dashboard.
 
 Key Features:
 - User authentication (login, logout, registration).
@@ -36,6 +38,7 @@ from functools import wraps
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
 
 def admin_required(f):
     """
@@ -86,6 +89,7 @@ def make_admin(user_id):
     flash(f"{user.username} is now an admin.", "success")
     return redirect(url_for('admin_dashboard'))
 
+
 @app.route('/delete_user/<int:user_id>')
 @login_required
 @admin_required
@@ -132,7 +136,7 @@ def edit_question(question_id):
         db.session.commit()
         flash('Question updated successfully!', 'success')
         return redirect(url_for('admin_dashboard'))
-    
+
     return render_template('edit_question.html', question=question)
 
 
@@ -364,43 +368,65 @@ def result():
 @login_required
 def add_question():
     """
-    Adds a new question to the quiz.
+    Adds new questions to the quiz.
 
     Returns:
-        str: Rendered HTML page for adding a question.
+        str: Rendered HTML page for adding questions.
         Redirect: Redirects to the admin dashboard upon successful addition.
     """
     if not current_user.is_admin:
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('index'))
+
     if request.method == 'POST':
-        # Capture form data
-        question_text = request.form.get('question')
-        option_a = request.form.get('option_a')
-        option_b = request.form.get('option_b')
-        option_c = request.form.get('option_c')
-        option_d = request.form.get('option_d')
-        correct_answer = request.form.get('answer')
+        # Capture form data for multiple questions
+        question_data = []
+        question_count = len(request.form) // 6
 
-        # Validate the form
-        if not all([question_text, option_a, option_b, option_c, option_d, correct_answer]):
-            flash('All fields are required.', 'danger')
-            return redirect(url_for('add_question'))
+        for i in range(question_count):
+            question_text = request.form.get(f'question_{i}')
+            option_a = request.form.get(f'option_a_{i}')
+            option_b = request.form.get(f'option_b_{i}')
+            option_c = request.form.get(f'option_c_{i}')
+            option_d = request.form.get(f'option_d_{i}')
+            correct_answer = request.form.get(f'answer_{i}')
 
-        # Save the new question in the database
-        new_question = Question(
-            question=question_text,
-            option_a=option_a,
-            option_b=option_b,
-            option_c=option_c,
-            option_d=option_d,
-            answer=correct_answer
-        )
-        db.session.add(new_question)
+            # Validate each question's data
+            if not all([
+                question_text,
+                option_a,
+                option_b,
+                option_c,
+                option_d,
+                correct_answer
+            ]):
+                flash('All fields are required for each question.', 'danger')
+                return redirect(url_for('add_question'))
+
+            question_data.append({
+                'question': question_text,
+                'option_a': option_a,
+                'option_b': option_b,
+                'option_c': option_c,
+                'option_d': option_d,
+                'answer': correct_answer
+            })
+
+        # Save the new questions to the database
+        for data in question_data:
+            new_question = Question(
+                question=data['question'],
+                option_a=data['option_a'],
+                option_b=data['option_b'],
+                option_c=data['option_c'],
+                option_d=data['option_d'],
+                answer=data['answer']
+            )
+            db.session.add(new_question)
         db.session.commit()
 
-        flash('Question added successfully!', 'success')
-        return redirect(url_for('admin_dashboard'))  # Redirect to admin dashboard
+        flash('Questions added successfully!', 'success')
+        return redirect(url_for('admin_dashboard'))  # Redirect to dashboard
 
     return render_template('add_question.html')
 
@@ -410,7 +436,7 @@ def get_questions():
     """
     Provide an API endpoint to retrieve all quiz questions.
     Returns:
-        dict: JSON response containing a list of all questions and their details.
+        dict: JSON response containing a list of all questions & their details.
     """
     questions = Question.query.all()
     question_list = [{
